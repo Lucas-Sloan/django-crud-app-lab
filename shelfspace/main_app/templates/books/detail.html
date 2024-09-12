@@ -6,6 +6,17 @@
     <p>Description: {{ book.description }}</p>
     <p>Genre: {{ book.genre }}</p>
 
+    <h2>Reviews:</h2>
+    <ul>
+        {% for review in book.reviews.all %}
+            <li>{{ review.content }} - Rated {{ review.rating }}/10 on {{ review.date }}</li>
+        {% empty %}
+            <li>No reviews yet. Be the first to leave one!</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'add_review' book.id %}">Add a Review</a>
+    <br>
     <a href="{% url 'book_update' book.id %}">Edit</a>
     <form action="{% url 'book_delete' book.id %}" method="POST" style="display:inline;">
         {% csrf_token %}

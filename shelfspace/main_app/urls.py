@@ -8,4 +8,5 @@ urlpatterns = [
     path('books/new/', views.book_create, name='book_create'),  # Add Book Form
     path('books/<int:book_id>/edit/', views.book_update, name='book_update'),  # Update Book
     path('books/<int:book_id>/delete/', views.book_delete, name='book_delete'),  # Delete Book
+    path('books/<int:book_id>/reviews/add/', views.add_review, name='add_review'), # Add Review Form
 ]

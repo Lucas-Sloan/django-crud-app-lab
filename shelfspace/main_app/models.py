@@ -12,3 +12,12 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         return reverse('book-detail', kwargs={'pk': self.id})
+    
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    content = models.TextField(max_length=500)
+    rating = models.IntegerField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.book.title} - {self.rating}/5"

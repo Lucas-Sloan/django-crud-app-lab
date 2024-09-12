@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book
 from .forms import BookForm
+from .forms import ReviewForm
 
 def home(request):
     return render(request, 'home.html')
@@ -41,3 +42,17 @@ def book_delete(request, book_id):
         book.delete()
         return redirect('books_index')
     return render(request, 'books/book_confirm_delete.html', {'book': book})
+
+def add_review(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            new_review = form.save(commit=False)
+            new_review.book = book
+            new_review.save()
+            return redirect('book_detail', book_id=book.id)
+    else:
+        form = ReviewForm()
+    
+    return render(request, 'books/add_review.html', {'form': form, 'book': book})
