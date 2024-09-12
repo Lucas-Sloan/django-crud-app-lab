@@ -9,7 +9,11 @@
     <h2>Reviews:</h2>
     <ul>
         {% for review in book.reviews.all %}
-            <li>{{ review.content }} - Rated {{ review.rating }}/10 on {{ review.date }}</li>
+            <li>
+                {{ review.content }} - Rated {{ review.rating }}/10 on {{ review.date }}
+                <a href="{% url 'update_review' book.id review.id %}">Edit</a>
+                <a href="{% url 'delete_review' book.id review.id %}">Delete</a>
+            </li>
         {% empty %}
             <li>No reviews yet. Be the first to leave one!</li>
         {% endfor %}
@@ -17,9 +21,7 @@
 
     <a href="{% url 'add_review' book.id %}">Add a Review</a>
     <br>
-    <a href="{% url 'book_update' book.id %}">Edit</a>
-    <form action="{% url 'book_delete' book.id %}" method="POST" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Delete</button>
+    <a href="{% url 'book_update' book.id %}">Edit Book</a>
+    <a href="{% url 'book_delete' book.id %}">Delete</a>
     </form>
 {% endblock %}
