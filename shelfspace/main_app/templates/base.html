@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShelfSpace</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
@@ -14,6 +16,7 @@
             <li><a href="{% url 'book_create' %}">Add Book</a></li>
 
             {% if user.is_authenticated %}
+                <li><a href="#">Welcome, {{ user.username }}</a></li>
                 <li>
                     <form method="POST" action="{% url 'logout' %}" style="display:inline;">
                         {% csrf_token %}
@@ -22,7 +25,6 @@
                         </button>
                     </form>
                 </li>
-                <li><a href="#">Welcome, {{ user.username }}</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'signup' %}">Sign Up</a></li>
