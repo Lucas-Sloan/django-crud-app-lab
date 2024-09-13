@@ -1,29 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book, Review
-from .forms import BookForm, ReviewForm
+from .forms import BookForm, ReviewForm, SignUpForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def books_index(request):
-    books = Book.objects.all()
+    books = Book.objects.filter(user=request.user)
     return render(request, 'books/index.html', {'books': books})
 
 def book_detail(request, book_id):
     book = Book.objects.get(id=book_id)
     return render(request, 'books/detail.html', {'book': book})
 
+@login_required
 def book_create(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_book = form.save(commit=False)
+            new_book.user = request.user
+            new_book.save()
             return redirect('books_index')
     else:
         form = BookForm()
 
     return render(request, 'books/book_form.html', {'form': form})
 
+@login_required
 def book_update(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
@@ -35,6 +42,7 @@ def book_update(request, book_id):
         form = BookForm(instance=book)
     return render(request, 'books/book_form.html', {'form': form, 'book': book})
 
+@login_required
 def book_delete(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
@@ -79,3 +87,14 @@ def delete_review(request, book_id, review_id):
         return redirect('book_detail', book_id=book.id)
     
     return render(request, 'reviews/review_confirm_delete.html', {'book': book, 'review': review})
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})

@@ -1,6 +1,7 @@
 from django import forms
-from .models import Book
-from .models import Review
+from .models import Book, Review
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -15,3 +16,9 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['content', 'rating']
+
+class SignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
